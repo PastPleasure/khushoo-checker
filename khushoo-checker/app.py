@@ -11,7 +11,8 @@ query_params = st.experimental_get_query_params()
 # Handle login token if it's present
 if "token" in query_params:
     id_token = query_params["token"][0]
-    verify_url = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDH6wELsX1BH3ndY2HOMSH6wKrECgNoKe0"
+    firebase_api_key = st.secrets["FIREBASE_API_KEY"]
+    verify_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={firebase_api_key}"
     res = requests.post(verify_url, json={"idToken": id_token})
     if res.status_code == 200:
         user_info = res.json()["users"][0]
