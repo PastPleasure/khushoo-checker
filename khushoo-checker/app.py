@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 import requests
 
 query_params = st.experimental_get_query_params()
+
+# Handle login token if it's present
 if "token" in query_params:
     id_token = query_params["token"][0]
-
-    verify_url = f"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDH6wELsX1BH3ndY2HOMSH6wKrECgNoKe0"
+    verify_url = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDH6wELsX1BH3ndY2HOMSH6wKrECgNoKe0"
     res = requests.post(verify_url, json={"idToken": id_token})
     if res.status_code == 200:
         user_info = res.json()["users"][0]
@@ -22,11 +23,14 @@ if "token" in query_params:
     else:
         st.warning("⚠️ Failed to verify login.")
 
-
+# ✅ Show login button if no user session exists (important!)
 if "user" not in st.session_state:
     st.markdown("## 🔐 Please log in to use Khushoo Coach")
     st.link_button("Login with Google", "https://khushoo-checker.netlify.app")
     st.stop()
+
+# Optional: Welcome message after login
+st.success(f"👋 Welcome, {st.session_state.user['name']}!")
 
 openai.api_key = os.getenv("OPENAI_API_KEY") # Adjust the path to your .env file
 client = OpenAI()
