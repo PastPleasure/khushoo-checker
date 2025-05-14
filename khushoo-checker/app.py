@@ -9,8 +9,7 @@ import requests
 st.set_page_config(page_title="Khushoo Coach")
 
 query_params = st.query_params
-
-FIREBASE_API_KEY = st.secrets("FIREBASE_API_KEY")
+FIREBASE_API_KEY = st.secrets["FIREBASE_API_KEY"]
 
 if "user" not in st.session_state:
     token = query_params.get("token")
@@ -20,24 +19,25 @@ if "user" not in st.session_state:
             json={"idToken": token}
         )
         if res.status_code == 200:
-            user = res.json(["users"])[0]
+            user = res.json()["users"][0]
             st.session_state.user = {
                 "email": user["email"],
-                "name": user["displayName", "Anonymous"],
+                "name": user.get("displayName", "Anonymous"),
                 "uid": user["localId"]
             }
         else:
-            st.warning("Failed to verify login.")
+            st.warning("⚠️ Failed to verify login.")
             st.session_state.user = None
     else:
         st.session_state.user = None
 
 if st.session_state.user is None:
-    st.title("Please log in to use Khushoo coach")
+    st.title("🔐 Please log in to use Khushoo Coach")
     st.link_button("Login with Google", "https://khushoo-checker.netlify.app")
     st.stop()
 
-st.success(f"Welcome, {st.session_state.user['name']}")
+st.success(f"👋 Welcome, {st.session_state.user['name']}")
+
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY") # Adjust the path to your .env file
