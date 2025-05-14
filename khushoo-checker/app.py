@@ -19,7 +19,7 @@ You are an Islamic sunni advisor who understands Qur'an, Hadith, Scholars and ps
 - Mental distractions: {answers.get('distractions')}
 - Time available with full focus: {answers.get('focus_time')} minutes
 
-Based on this, give them strong advice relating to their answers with 1–2 authentic hadiths, and finish with a spiritual motivation (e.g. imagine this is their last prayer, meeting Allah, reward of khushoo, etc). Be compassionate but firm. Keep it under 300 words.
+Based on this, give them strong advice relating to their answers with 1–2 authentic hadiths, and give them logical solutions to their problems example: if a person has only 2 minutes to pray with focus maybe its smarter they pray later to get full focus, and finish with a spiritual motivation (e.g. imagine this is their last prayer, meeting Allah, reward of khushoo, etc). Be compassionate but firm. Keep it under 300 words.
 """
     response = client.chat.completions.create(
         model="gpt-4-turbo",
