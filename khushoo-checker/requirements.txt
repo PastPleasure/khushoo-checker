@@ -2,3 +2,4 @@ streamlit
 openai
 python-dotenv
 firebase-admin
+pyrebase4

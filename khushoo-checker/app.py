@@ -3,7 +3,7 @@ import openai
 from openai import OpenAI
 import os
 import requests
-import pyrebase64
+import pyrebase
 from datetime import datetime, timedelta
 
 
