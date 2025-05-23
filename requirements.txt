@@ -2,5 +2,7 @@ streamlit
 openai
 python-dotenv
 firebase-admin
-pyrebase4
 google-cloud-storage
+requests
+sendgrid
+python_http_client
