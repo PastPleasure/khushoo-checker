@@ -41,21 +41,7 @@ def login_user(email, password, api_key):
     else:
         raise Exception(response.json().get("error", {}).get("message", "Login failed"))
 
-
-# 🔁 Auto-login from URL query params
-params = st.query_params
-
-if "user" not in st.session_state:
-    token = params.get("token", [None])[0]
-    email = params.get("email", [None])[0]
-
-    if token and email:
-        st.session_state.user = {"idToken": token}
-        st.session_state["user_email"] = email
-
-
         
-
 # 👤 Login UI
 if "user" not in st.session_state:
     st.title("Login")
@@ -67,7 +53,6 @@ if "user" not in st.session_state:
             id_token = user_data.get("idToken")
             st.session_state.user = user_data
             st.session_state["user_email"] = email
-            st.query_params.update({"token": id_token, "email": email})
             st.success(f"Logged in as {email}")
             st.rerun()
         except Exception as e:
@@ -75,11 +60,6 @@ if "user" not in st.session_state:
     st.stop()
 else:
     st.info(f"Logged in as {st.session_state.user_email}")
-
-if st.button("Logout"):
-    st.session_state.clear()
-    st.query_params.clear()
-    st.rerun()
 
 # 🌍 Prayer Time API
 def get_prayer_times(city, country):
