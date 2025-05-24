@@ -7,7 +7,14 @@ from datetime import datetime, timedelta
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import time
+import json
+
 #load_dotenv(dotenv_path="")
+firebase_admin_key = os.getenv("FIREBASE_ADMIN_KEY_JSON")
+if not firebase_admin_key:
+    raise ValueError("FIREBASE_ADMIN_KEY_JSON environment variable is not set.")
+firebase_admin_key_dict = json.loads(firebase_admin_key)
+
 
 def send_email(to_email, subject, message):
     try:
@@ -52,7 +59,7 @@ def get_reminder_times(timings):
 
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase_admin_key.json")
+    cred = credentials.Certificate(firebase_admin_key_dict)
     firebase_admin.initialize_app(cred, {
         "databaseURL": os.getenv("FIREBASE_DB_URL")
 
@@ -64,10 +71,13 @@ def get_all_users():
 
 if __name__ == "__main__":
     print("🚀 Reminder Worker Started...")
+    sent_reminders = {}
 
     while True:
         users = get_all_users()
         now = datetime.now().strftime("%H:%M")
+        if now == "00:00":
+            sent_reminders.clear()  # Reset reminders at midnight
 
         if users:
             for uid, info in users.items():
@@ -82,12 +92,14 @@ if __name__ == "__main__":
                 reminder_times = get_reminder_times(prayer_times)
 
                 for prayer, reminder_time in reminder_times.items():
-                    if now == reminder_time:
+                    key = f"{uid}_{prayer}"
+                    if now == reminder_time and sent_reminders.get(key) != now:
                         send_email(
                             email,
                             subject=f"🕌 Time to Prepare for {prayer}",
                             message=f"As-salaamu 'alaykum!\n\nIt's almost time for {prayer} prayer. Take a moment to do your Khushoo checklist before standing before Allah.\n\nVisit your Khushoo Coach to prepare now.\n\n🕋 https://your-app-url.com"
                         )
+                        sent_reminders[key] = now
 
         time.sleep(60)  # Wait one minute before checking again
 
