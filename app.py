@@ -11,10 +11,15 @@ from dotenv import load_dotenv
 
 # 🔐 Load environment variables from 
 #load_dotenv(dotenv_path="")
+# 🔐 API keys
+firebase_api_key = os.getenv("FIREBASE_API_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")
+firebase_admin_key = os.getenv("FIREBASE_ADMIN_KEY_JSON")
+client = OpenAI()
 
 # 🔐 Firebase Admin Init
 if not firebase_admin._apps:
-    cred = credentials.Certificate("FIREBASE_ADMIN_KEY_JSON")
+    cred = credentials.Certificate(firebase_admin_key)
     firebase_admin.initialize_app(cred, {
     "databaseURL": "https://khushoo-checker1-default-rtdb.europe-west1.firebasedatabase.app/"
     })
@@ -33,11 +38,6 @@ def login_user(email, password, api_key):
     else:
         raise Exception(response.json().get("error", {}).get("message", "Login failed"))
 
-# 🔐 API keys
-firebase_api_key = os.getenv("FIREBASE_API_KEY")
-openai.api_key = os.getenv("OPENAI_API_KEY")
-firebase_admin_key = os.getenv("FIREBASE_ADMIN_KEY_JSON")
-client = OpenAI()
 
 # 👤 Login UI
 if "user" not in st.session_state:
