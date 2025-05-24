@@ -11,4 +11,5 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Default command for Render (web service)
-CMD ["streamlit", "run", "app.py", "--server.port=$PORT", "--server.enableCORS=false"]
+CMD streamlit run app.py --server.port=$PORT --server.enableCORS=false
+
