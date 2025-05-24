@@ -10,7 +10,7 @@ import json
 from dotenv import load_dotenv
 
 # 🔐 Load environment variables from 
-#load_dotenv(dotenv_path="")
+# load_dotenv(dotenv_path="
 # 🔐 API keys
 firebase_api_key = os.getenv("FIREBASE_API_KEY")
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -42,6 +42,20 @@ def login_user(email, password, api_key):
         raise Exception(response.json().get("error", {}).get("message", "Login failed"))
 
 
+# 🔁 Auto-login from URL query params
+params = st.experimental_get_query_params()
+
+if "user" not in st.session_state:
+    token = params.get("token", [None])[0]
+    email = params.get("email", [None])[0]
+
+    if token and email:
+        st.session_state.user = {"idToken": token}
+        st.session_state["user_email"] = email
+
+
+        
+
 # 👤 Login UI
 if "user" not in st.session_state:
     st.title("Login")
@@ -50,8 +64,10 @@ if "user" not in st.session_state:
     if st.button("Login"):
         try:
             user_data = login_user(email, password, firebase_api_key)
+            id_token = user_data.get("idToken")
             st.session_state.user = user_data
             st.session_state["user_email"] = email
+            st.experimental_set_query_params(token=id_token, email=email)
             st.success(f"Logged in as {email}")
             st.rerun()
         except Exception as e:
@@ -59,6 +75,11 @@ if "user" not in st.session_state:
     st.stop()
 else:
     st.info(f"Logged in as {st.session_state.user_email}")
+
+if st.button("Logout"):
+    st.session_state.clear()
+    st.experimental_set_query_params()
+    st.rerun()
 
 # 🌍 Prayer Time API
 def get_prayer_times(city, country):
