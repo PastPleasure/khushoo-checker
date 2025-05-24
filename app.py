@@ -43,7 +43,7 @@ def login_user(email, password, api_key):
 
 
 # 🔁 Auto-login from URL query params
-params = st.experimental_get_query_params()
+params = st.query_params
 
 if "user" not in st.session_state:
     token = params.get("token", [None])[0]
@@ -67,7 +67,7 @@ if "user" not in st.session_state:
             id_token = user_data.get("idToken")
             st.session_state.user = user_data
             st.session_state["user_email"] = email
-            st.experimental_set_query_params(token=id_token, email=email)
+            st.query_params.update({"token": id_token, "email": email})
             st.success(f"Logged in as {email}")
             st.rerun()
         except Exception as e:
@@ -78,7 +78,7 @@ else:
 
 if st.button("Logout"):
     st.session_state.clear()
-    st.experimental_set_query_params()
+    st.query_params.clear()
     st.rerun()
 
 # 🌍 Prayer Time API
