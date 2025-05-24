@@ -10,5 +10,5 @@ COPY . .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Default command — gets overridden by Render start command
-CMD ["python", "app.py"]
+# Default command for Render (web service)
+CMD ["streamlit", "run", "app.py", "--server.port=$PORT", "--server.enableCORS=false"]
