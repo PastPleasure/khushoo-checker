@@ -97,7 +97,7 @@ if __name__ == "__main__":
                         send_email(
                             email,
                             subject=f"🕌 Time to Prepare for {prayer}",
-                            message=f"As-salaamu 'alaykum!\n\nIt's almost time for {prayer} prayer. Take a moment to do your Khushoo checklist before standing before Allah.\n\nVisit your Khushoo Coach to prepare now.\n\n🕋 https://your-app-url.com"
+                            message=f"As-salaamu 'alaykum!\n\nIt's almost time for {prayer} prayer. Take a moment to do your Khushoo checklist before standing before Allah.\n\nVisit your Khushoo Coach to prepare now.\n\n🕋 https://khushoo-checker.onrender.com/"
                         )
                         sent_reminders[key] = now
 
