@@ -15,11 +15,14 @@ from dotenv import load_dotenv
 firebase_api_key = os.getenv("FIREBASE_API_KEY")
 openai.api_key = os.getenv("OPENAI_API_KEY")
 firebase_admin_key = os.getenv("FIREBASE_ADMIN_KEY_JSON")
+if not firebase_admin_key:
+    raise ValueError("FIREBASE_ADMIN_KEY_JSON environment variable is not set.")
+firebase_admin_key_dict = json.loads(firebase_admin_key)
 client = OpenAI()
 
 # 🔐 Firebase Admin Init
 if not firebase_admin._apps:
-    cred = credentials.Certificate(firebase_admin_key)
+    cred = credentials.Certificate(firebase_admin_key_dict)
     firebase_admin.initialize_app(cred, {
     "databaseURL": "https://khushoo-checker1-default-rtdb.europe-west1.firebasedatabase.app/"
     })
